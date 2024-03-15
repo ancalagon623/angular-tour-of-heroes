@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Hero } from '../hero-interface';
 import { HeroService } from '../hero.service';
-import { Observable, of } from 'rxjs';
+import { MessageService } from '../message.service';
 
 @Component({
   // standalone: true,
@@ -16,14 +16,16 @@ export class HeroesComponent {
   selectedHero?: Hero;
   heroes: Hero[] = [];
 
-  constructor(private heroService: HeroService) { }
+  constructor(private heroService: HeroService, private messageService: MessageService) { }
 
   onSelect(hero: Hero): void {
     this.selectedHero = hero;
+    this.messageService.add(`HeroesComponent: Selected hero of id: ${hero.id}`);
   }
 
   getHeroes() {
-    this.heroes = this.heroService.getHeroes();
+    this.heroService.getHeroes()
+      .subscribe((heroes) => this.heroes = heroes);
   }
 
   ngOnInit() {
